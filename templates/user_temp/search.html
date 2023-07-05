@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+
+{% block title %}
+
+{% endblock title %}
+
+{% block content %}
+    {% csrf_token %}
+
+    <header>
+        <div class="section1">
+            <form action="{% url 'search-view' %}" method="get">
+                <input class="search" type="text" name="search" placeholder="Search URL...">
+            </form>
+
+            <button class="button1" type="button"> <a href="{% url 'url-fecth' %}">Insert new URL</a></button>
+        </div>
+
+        <hr size="4" width="83%" >
+
+        <input style="margin-left: 165px; margin-bottom: 10px;" type="checkbox" id="main-check" onclick="func_all()"> My-Urls <br>
+        <button style="margin-left: 165px; display: none;" type="submit" id="delete_btn" class="btn btn-danger btn-sm">Delete-All</button>
+ 
+
+    </header>
+
+    <div class="container">
+
+
+        <div class="row col-links">
+            {% if url_search_by_name %}
+                {% for res in url_search_by_name %}
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-2 col-xl-2 div1" style="display: inline">
+
+                        <main class="mainHom">
+
+                            <p style="display: inline-flex;">
+                                <a href="{% url 'delete-solo' res.id %}" class="del text-danger" style="text-decoration: none;"></a>
+                            </p>
+        
+                            <p class="or" style="display: inline;"></p>
+        
+                            <p style="display: inline-flex;">
+                                <a href="{% url 'update-solo' res.id %}" class="upd text-success" style="text-decoration: none;"></a>
+                            </p>
+    
+                            <p class="" style="display: block; margin-top: 10px; font-size: larger; font-family: 'montserret', sans-serif;">{{ res.name }}</p>
+                            <p class="text-muted">{{ res.source_code | truncatechars:200 }}</p>
+    
+                        </main>
+
+                        <input class="select" type="checkbox" name="check1" id="check1" value="{{ res.id }}" onclick="func1()" style="cursor: pointer;">
+
+                    </div>
+                {% endfor %}
+            {% elif url_search_by_url%}
+                {% for res in url_search_by_url %}
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-2 col-xl-2 div1" style="display: inline">
+
+                        <main class="mainHom">
+
+                            <p style="display: inline-flex;">
+                                <a href="{% url 'delete-solo' res.id %}" class="del text-danger" style="text-decoration: none;"></a>
+                            </p>
+        
+                            <p class="or" style="display: inline;"></p>
+        
+                            <p style="display: inline-flex;">
+                                <a href="{% url 'update-solo' res.id %}" class="upd text-success" style="text-decoration: none;"></a>
+                            </p>
+    
+                            <p class="" style="display: block; margin-top: 10px; font-size: larger; font-family: 'montserret', sans-serif;">{{ res.name }}</p>
+                            <p class="text-muted">{{ res.source_code | truncatechars:200 }}</p>
+    
+                        </main>
+
+                        <input class="select" type="checkbox" name="check1" id="check1" value="{{ res.id }}" onclick="func1()" style="cursor: pointer;">
+
+                    </div>
+                {% endfor %}
+            {% elif url_search_by_source_code %}
+                {% for res in url_search_by_source_code %}
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-2 col-xl-2 div1" style="display: inline">
+
+                        <main class="mainHom">
+
+                            <p style="display: inline-flex;">
+                                <a href="{% url 'delete-solo' res.id %}" class="del text-danger" style="text-decoration: none;"></a>
+                            </p>
+        
+                            <p class="or" style="display: inline;"></p>
+        
+                            <p style="display: inline-flex;">
+                                <a href="{% url 'update-solo' res.id %}" class="upd text-success" style="text-decoration: none;"></a>
+                            </p>
+    
+                            <p class="" style="display: block; margin-top: 10px; font-size: larger; font-family: 'montserret', sans-serif;">{{ res.name }}</p>
+                            <p class="text-muted">{{ res.source_code | truncatechars:200 }}</p>
+    
+                        </main>
+
+                        <input class="select" type="checkbox" name="check1" id="check1" value="{{ res.id }}" onclick="func1()" style="cursor: pointer;">
+
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        window.onload=function(){
+            let hAc = document.getElementById('hAc');
+            hAc.classList.add("active");
+        }
+        
+        const func1 = () =>{
+            let _div   = document.getElementsByClassName('div1');
+            let _del   = document.getElementsByClassName('del');
+            let _upd   = document.getElementsByClassName('upd');
+            let _check = document.getElementsByName('check1');
+            let _or    = document.getElementsByClassName('or');
+
+            for (let i = 0; i<_div.length; i++) {
+                if (_check[i].checked) {
+                    _or[i].innerHTML     = `or`;
+                    _div[i].style.border = "solid 1px black";
+                    _del[i].innerHTML    = "delete";
+                    _upd[i].innerHTML    = "update";
+                } else {
+                    _or[i].innerHTML     = ``;
+                    _div[i].style.border = null;
+                    _del[i].innerHTML    = ""
+                    _upd[i].innerHTML    = ""
+                }
+            }
+        }
+    
+        const func_all = () => {
+            let _div        = document.getElementsByClassName('div1');
+            let _del        = document.getElementsByClassName('del');
+            let _upd        = document.getElementsByClassName('upd');
+            let _main_check = document.getElementById('main-check');
+            let _boxes      = document.getElementsByName('check1');
+
+            let _del_all    = document.getElementById('delete_btn');
+            let _or    = document.getElementsByClassName('or');
+
+
+
+            for (let i=0; i<_boxes.length; i++) {
+                if (_main_check.checked) {
+                    _del_all.style.display   = ""
+                    _or[i].innerHTML         = `or`;
+                    _boxes[i].checked        = _main_check.checked
+                    _div[i].style.border     = "solid 1px black";
+                    _del[i].innerHTML        = "delete"
+                    _upd[i].innerHTML        = "update"
+                }else{
+                    _del_all.style.display   = "none"
+                    _or[i].innerHTML         = ``;
+                    _boxes[i].checked        = false
+                    _div[i].style.border     = null;
+                    _del[i].innerHTML        = ""
+                    _upd[i].innerHTML        = ""
+                }
+            }
+        }
+    
+        $(document).ready(function(){
+            $('#delete_btn').click(function(){
+                if (confirm('Are you sure delete all. ?')) {
+                    let id   = []
+                    let csrf = $('input[name=csrfmiddlewaretoken]').val()
+                    $(':checkbox:checked').each(function(i){
+                        id[i] = $(this).val()
+                    })
+                    if (id[0] == 'on') {
+                        id.shift()
+                    }
+                    if (id.length == 0) {
+                        alert('please select item to delete. !')
+                    }else{
+                        console.log(id);
+                        $.ajax({
+                            url: '/',
+                            method: "POST",
+                            data:{
+                                id,
+                                csrfmiddlewaretoken: csrf,
+                            },
+                            success: function(response){
+                                window.location = '/'
+                            }
+                        })
+                    }
+                }
+            })
+        })
+    
+    </script>
+
+
+
+
+
+
+{% endblock content %}

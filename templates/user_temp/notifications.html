@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Notifications
+{% endblock title %}
+
+{% block content %}
+<!-- <script>
+	
+	window.onload=function(){
+		var element = document.getElementById("hov");
+		element.classList.add("active");
+
+	}
+
+	const loc = window.location.origin;
+
+	$.ajax({
+		url: `${loc}/notifications-api/`,
+		method: 'GET',
+		success: function(response){
+			let list  = []
+			const data = response.lines
+			data.map(item => {
+				list.push(item)
+			})
+			for (let i=0; i<list.length;) {
+				let div = document.createElement('div')
+				div.classList.add('container','col-md-5', 'col-sm-8', 'border-bottom', 'position-relative');
+				div.style.marginBottom = '40px'
+				div.innerHTML = `<p><strong>${list[i+1]}</strong> ${list[i]}</p>
+								 <p>${list[i+2]}</p>
+								 <p>${list[i+3]}</p>
+								 <p>${list[i+4]}</p>`
+				document.body.appendChild(div)
+				i += 5
+			}
+		}
+	})
+
+</script> -->
+
+<script>
+		window.onload=function(){
+		var element = document.getElementById("hov");
+		element.classList.add("active");
+
+	}
+</script>
+<div class="container">
+	<div style="margin-top:150px;" class="card mb-5">
+
+		{% for url in urls %}
+			<div class="row justify-content-center mt-5">
+				<div class="col-md-10 col-sm-8 border-bottom position-relative">
+					<h3 style="display: inline;">{{ url.name }}</h3> <p class="text-dark" style="display: inline;">  {{ url.created_on }}</p>
+
+					<p><a href="{{ url.url }}" style="text-decoration: none;" target="_blank">{{ url.url }}</a></p>
+
+					<div class="alert alert-danger">
+						<p>{{ url.old_line }}</p>
+					</div>
+
+					<div class="alert alert-success">
+
+						<p>{{ url.new_line }}</p>
+					</div>
+
+				</div>
+			</div>
+		{% endfor %}
+
+	</div>
+</div>
+
+{% endblock content %}

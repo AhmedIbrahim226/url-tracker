@@ -1,0 +1,8 @@
+.notice{
+	height: 10px;
+	width: 10px;
+	background-color: rgb(255, 5, 5);
+	border-radius: 50%;
+	display: inline-block;
+	vertical-align: top;
+}

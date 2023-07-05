@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Modify | Url
+{% endblock %}
+
+{% block content %}
+
+	<form class="add" method="post">
+		{% csrf_token %}
+		<h5>Modify URL</h5>
+		<div>
+			<!-- <label class="labelForm">Name</label> -->
+			<label>{{ form.name.label }}</label>
+			{{ form.name }}
+			{% if errorName %}
+					<p class="text-danger text-center" style="font-weight: bold;">{{ errorName }}</p>
+			{% endif %}
+
+		</div>
+
+		<div>
+			<label>{{ form.url.label }}</label>
+			{{ form.url }}
+			{% if errorUrl %}
+				<p class="text-danger text-center" style="font-weight: bold;">{{ errorUrl }}</p>
+			{% endif %}
+		</div>
+
+		<div>
+			<label>{{ form.checking_length.label }}</label>
+			{{ form.checking_length }}
+		</div>
+
+		<div>
+			<label>{{ form.updating_time.label }}</label>
+			{{ form.updating_time }}
+		</div>
+
+		<button class="button1_insert" type="submit">Save</button>
+	</form>
+	<script>
+		let allInp = document.getElementsByTagName('input')
+		for (const key in allInp) {
+			allInp[key].className = 'edIn1'
+		}
+
+		let allLabel = document.getElementsByTagName('label')
+		for (const key in allLabel) {
+			allLabel[key].className = 'labelForm'
+		}
+	</script>
+{% endblock %}

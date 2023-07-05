@@ -1,0 +1,267 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    My | Data
+{% endblock %}
+
+{% block content %}
+
+    <!-- <div style="background: #f2e7c3; padding: 0 50px 80px 50px; margin: 100px 30% 50% 30%">
+        <div class="btn-group offset-4" role="group" aria-label="Basic mixed styles example">
+        <button id="b1" type="button" class="btn btn-success">Account</button>
+        <button id="b2" type="button" class="btn btn-success">Email</button>
+        <button id="b3" type="button" class="btn btn-success">Password</button>
+    </div>
+    <div id="customDiv" style="width: 50%; margin-left: 25%;">
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ edit_user_form.username.label }}
+            {{ edit_user_form.username }}
+            {{ edit_user_form.email }}
+            {{ edit_user_form.first_name.label }}
+            {{ edit_user_form.first_name }}
+            {{ edit_user_form.last_name.label }}
+            {{ edit_user_form.last_name }}
+            <button class="btn btn-warning" type="submit">Save</button>
+        </form>
+    </div>
+    </div>
+
+    <script>
+             let form_inputs = document.getElementsByTagName('input')
+             let email       = document.getElementById('id_email')
+             email.setAttribute('type', 'hidden')
+
+
+            for (const key in form_inputs) {
+                form_inputs[key].className = 'form-control'
+                form_inputs[key].setAttribute('required', '')
+            }
+    </script>
+
+
+
+    <script>
+        let Btn1 = document.getElementById('b1')
+        let Btn2 = document.getElementById('b2')
+        let Btn3 = document.getElementById('b3')
+
+        let cusdiv = document.getElementById('customDiv')
+
+        Btn1.addEventListener('click', ev => {
+            ev.preventDefault()
+            cusdiv.innerHTML = `<form action="" method="post">
+                                {% csrf_token %}
+                                {{ edit_user_form.username.label }}
+                                {{ edit_user_form.username }}
+                                {{ edit_user_form.email }}
+                                {{ edit_user_form.first_name.label }}
+                                {{ edit_user_form.first_name }}
+                                {{ edit_user_form.last_name.label }}
+                                {{ edit_user_form.last_name }}
+                                <button class="btn btn-warning" type="submit">Save</button>
+                            </form>`
+            let form_inputs = document.getElementsByTagName('input')
+            let email       = document.getElementById('id_email')
+            email.setAttribute('type', 'hidden')
+            for (const key in form_inputs) {
+                form_inputs[key].className = 'form-control'
+                form_inputs[key].setAttribute('required', '')
+            }
+        })
+
+        Btn2.addEventListener('click', ev => {
+            ev.preventDefault()
+            cusdiv.innerHTML = `<form action="" method="post">
+                    {% csrf_token %}
+
+                    {{ edit_user_form.username }}
+
+                    {{ edit_user_form.email.label }}
+                    {{ edit_user_form.email }}
+
+                    {{ edit_user_form.first_name }}
+
+                    {{ edit_user_form.last_name }}
+                    <button class="btn btn-warning" type="submit">Save</button>
+                </form>`
+
+
+            let form_inputs = document.getElementsByTagName('input')
+            document.getElementById('id_username').setAttribute('type','hidden')
+            document.getElementById('id_first_name').setAttribute('type','hidden')
+            document.getElementById('id_last_name').setAttribute('type','hidden')
+
+            for (const key in form_inputs) {
+                form_inputs[key].className = 'form-control'
+                form_inputs[key].setAttribute('required', '')
+            }
+        })
+
+        Btn3.addEventListener('click', ev => {
+            cusdiv.innerHTML = `
+                <a href="{% url 'set-new-password' %}" class="btn btn-link">Change-Password</a><br>
+                <a href="{% url 'reset_password' %}" class="btn btn-link">Reset-Password</a>
+            `
+        })
+
+
+    </script> -->
+
+
+    <div class="setting">
+
+        <div class="" style="margin: 11px 0 70px 12%;">
+            <ul class="liSet">
+                <li><a href="" id="b1">Account</a></li>
+                <li><a href="" id="b2">E-mail</a></li>
+                <li><a href="" id="b3">Password</a></li>
+            </ul>
+        </div>
+
+        <div id="customDiv">
+
+            <form action="" method="post">
+                {% csrf_token %}
+    
+                <label>{{ edit_user_form.username.label }}</label>
+                {{ edit_user_form.username }}
+    
+                {{ edit_user_form.email }}
+    
+                <label>{{ edit_user_form.first_name.label }}</label>
+                {{ edit_user_form.first_name }}
+    
+                
+                <label>{{ edit_user_form.last_name.label }}</label>
+                {{ edit_user_form.last_name }}
+    
+                <button class="button1" type="submit">Save</button>
+            </form>
+
+        </div>
+
+    </div>
+
+    <script>
+        
+        window.onload=function(){
+            let _b1 = document.getElementById('b1')
+            _b1.className = 'active' 
+        }
+
+        let form_inputs = document.getElementsByTagName('input')
+        let form_labels = document.getElementsByTagName('label')
+
+        let email       = document.getElementById('id_email')
+        email.setAttribute('type', 'hidden')
+
+        for (const key in form_labels) {
+           form_labels[key].className = 'labelForm'
+
+        }
+       for (const key in form_inputs) {
+           form_inputs[key].className = 'edIn1'
+           form_inputs[key].setAttribute('required', '')
+        }
+
+    </script>
+
+    <script>
+
+        let b1 = document.getElementById('b1')
+        let b2 = document.getElementById('b2')
+        let b3 = document.getElementById('b3')
+
+        let cusdiv = document.getElementById('customDiv')
+
+        b1.addEventListener('click', ev => {
+            b2.className = ''
+            b3.className = ''
+            b1.className = 'active';
+            ev.preventDefault()
+            cusdiv.innerHTML = `<form action="" method="post">
+                                {% csrf_token %}
+                                <label>{{ edit_user_form.username.label }}</label>
+                                {{ edit_user_form.username }}
+                                {{ edit_user_form.email }}
+                                <label>{{ edit_user_form.first_name.label }}</label>
+                                {{ edit_user_form.first_name }}
+                                <label>{{ edit_user_form.last_name.label }}</label>
+                                {{ edit_user_form.last_name }}
+                                <button class="button1" type="submit">Save</button>
+                            </form>`
+            let form_inputs = document.getElementsByTagName('input')
+            let form_labels = document.getElementsByTagName('label')
+
+            let email       = document.getElementById('id_email')
+            email.setAttribute('type', 'hidden')
+
+            for (const key in form_labels) {
+                form_labels[key].className = 'labelForm'
+
+            }
+            for (const key in form_inputs) {
+                form_inputs[key].className = 'edIn1'
+                form_inputs[key].setAttribute('required', '')
+            }
+        })
+    
+        b2.addEventListener('click', ev => {
+            b1.className = ''
+            b3.className = ''
+            b2.className = 'active'
+            ev.preventDefault()
+            cusdiv.innerHTML = `<form action="" method="post">
+                    {% csrf_token %}
+
+                    {{ edit_user_form.username }}
+
+                    <label>{{ edit_user_form.email.label }}</label>
+                    {{ edit_user_form.email }}
+
+                    {{ edit_user_form.first_name }}
+
+                    {{ edit_user_form.last_name }}
+                    <button class="button1" type="submit">Save</button>
+                </form>`
+
+
+            let form_inputs = document.getElementsByTagName('input')
+            let form_labels = document.getElementsByTagName('label')
+            document.getElementById('id_username').setAttribute('type','hidden')
+            document.getElementById('id_first_name').setAttribute('type','hidden')
+            document.getElementById('id_last_name').setAttribute('type','hidden')
+
+            for (const key in form_labels) {
+                form_labels[key].className = 'labelForm'
+
+            }
+            for (const key in form_inputs) {
+                form_inputs[key].className = 'edIn1'
+                form_inputs[key].setAttribute('required', '')
+            }
+        })
+        
+        b3.addEventListener('click', ev => {
+            b3.className = 'active'
+            b1.className = ''
+            b2.className = ''
+            ev.preventDefault()
+
+            cusdiv.innerHTML = `
+            <button class="button4"><a href="{% url 'reset_password' %}">Reset-Password</a></button>
+
+                <button class="button3"><a href="{% url 'set-new-password' %}">Change-Password</a></button>
+            `
+        })
+
+    </script>
+
+
+
+
+
+
+{% endblock %}

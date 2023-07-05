@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+    Login | Here
+{% endblock %}
+
+{% block fontawesome %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+{% endblock fontawesome %}
+
+{% block content %}
+<div class="log">
+    <form class="" method="post">
+        {% csrf_token %}
+        <h5>LOGIN</h5>
+        <label class="logLabel">User Name</label>
+        <input class="logInput" type="text" name="username" placeholder="User Name" />
+
+        <label class="logLabel">Password</label>
+        <input class="logInput" type="password" name="password" placeholder="password" />
+
+        <button class="button1" type="submit">Login</button>
+        <button class="button2" type="reset"><a href="{% url 'reset_password' %}">Reset Password</a></button>
+    </form>
+    {% for message in messages %}
+        <p class="text-danger text-center" style="margin-top: 70px; font-size:17; font-weight: bold;">{{ message }}</p>
+    {% endfor %}
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,52 @@
+{% load static %}
+{% block fontawesome %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+
+{% endblock fontawesome %}
+
+<nav class="navbar">
+    <div class="heading">
+        <!-- logo -->
+        <h4>URL Tracker</h4>
+    </div>
+    {% if user.is_authenticated %}
+        <ul class="nav-links menu">
+            <!-- navbar menu -->
+            <li><a id="hAc" class="" href="{% url 'home-view' %}">Home</a></li>
+            <li><a id="hov" class="cusNav" href="{% url 'not-view' %}">Notifications</a></li>
+            
+        </ul>
+        <div class="user">
+            <!-- profil image -->
+            <div class="dropdown">
+                <img src="{% static 'imgs/man.png' %}" alt="" />
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"></a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <!-- dropdown menu -->
+                    <li><a class="dropdown-item" href="{% url 'edit-my-data' %}">Settings</a></li>
+                    <li><a class="dropdown-item" href="{% url 'sign-out' %}">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+</nav>
+{% if user.is_authenticated %}
+    <div class="hamburger">
+        <!-- list icon -->
+        <i class="fas fa-bars"></i>
+    </div>
+{% endif %}
+
+
+<script>
+
+    document.querySelector('.hamburger').addEventListener("click", function(){
+            document.querySelector('.navbar .menu').classList.toggle("active");
+            document.querySelector('.hamburger i').classList.toggle("active");
+            document.querySelector('.user').classList.toggle("active");
+        });
+
+</script>
+
+
+
