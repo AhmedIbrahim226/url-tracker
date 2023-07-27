@@ -28,8 +28,8 @@ def check_difference(old_source, new_source):
     d = dmp.diff_main(old_source, new_source)
     d = define_0(d)
     dmp.diff_cleanupSemantic(d)
-    xxx = dmp.diff_prettyHtml(d)
-    return xxx
+    result = dmp.diff_prettyHtml(d)
+    return result
 
 def new_periodic_task(user_id, url_model_id, every):
     schedule, created = IntervalSchedule.objects.get_or_create(
@@ -39,7 +39,6 @@ def new_periodic_task(user_id, url_model_id, every):
     PeriodicTask.objects.create(
         interval=schedule,
         name=f'user_{user_id}_url_{url_model_id}',
-        task='f_app.tasks.main',
-        args=json.dumps([]),
-        start_time=timezone.now(),
+        task='f_app.tasks.monitor_url_changes',
+        args=json.dumps([url_model_id])
     )

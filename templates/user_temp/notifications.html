@@ -53,18 +53,22 @@
 		{% for url in urls %}
 			<div class="row justify-content-center mt-5">
 				<div class="col-md-10 col-sm-8 border-bottom position-relative">
-					<h3 style="display: inline;">{{ url.name }}</h3> <p class="text-dark" style="display: inline;">  {{ url.created_on }}</p>
+					<h3 style="display: inline;">{{ url.url_model.name }}</h3> <p class="text-dark" style="display: inline;">  {{ url.created_on }}</p>
 
-					<p><a href="{{ url.url }}" style="text-decoration: none;" target="_blank">{{ url.url }}</a></p>
+					<p><a href="{{ url.url }}" style="text-decoration: none;" target="_blank">{{ url.url_model.url }}</a></p>
 
-					<div class="alert alert-danger">
-						<p>{{ url.old_line }}</p>
+					<div>
+						{{url.description | safe}}
 					</div>
 
-					<div class="alert alert-success">
+<!--					<div class="alert alert-danger">-->
+<!--						<p>{{ url.old_line }}</p>-->
+<!--					</div>-->
 
-						<p>{{ url.new_line }}</p>
-					</div>
+<!--					<div class="alert alert-success">-->
+
+<!--						<p>{{ url.new_line }}</p>-->
+<!--					</div>-->
 
 				</div>
 			</div>

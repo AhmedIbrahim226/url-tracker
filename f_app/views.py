@@ -1,21 +1,17 @@
-from threading import Thread
-from time import sleep
-from typing import Any, Dict
 from django.contrib.auth.models import User
-from django.http import HttpResponse
-from django.http.response import HttpResponse, JsonResponse
+
 import requests
-from bs4 import BeautifulSoup
 import re
 
 from django.contrib import messages
-from django.contrib.auth import authenticate, get_user, login, logout, update_session_auth_hash
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.conf import settings
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.views.generic import View
 from .forms import EditUserForm, ChangePasswordForm, UrlForm
-from .models import UrlModel, ChangesInLines
+from .models import UrlModel, ChangesStore
+from django.views.generic.edit import FormView
 
 
 
@@ -153,7 +149,6 @@ def url_view(request):
 			new_periodic_task(request.user.id, url.id, time, (time*60)+1)
 	return render(request, 'user_temp/url_model.html', context=context)
 
-from django.views.generic.edit import FormView
 class UrlView(FormView):
 	form_class = UrlForm
 	template_name = 'user_temp/url_model.html'
@@ -255,40 +250,17 @@ def change_password_view(request):
 	return render(request, 'user_temp/change_password.html', context=context)
 
 
-'''def notifications(request):
-	listContext = []
-	url = ChangesInLines.objects.filter(user=request.user).order_by('-created_on')
-
-	for line in url:
-		oldLineRe = re.sub('[\"-<->]', "", line.old_line)
-		newLineRe = re.sub('[\"-<->]', "", line.new_line)
-		listContext.append(line.created_on)
-		listContext.append(line.name)
-		listContext.append(line.url)
-		listContext.append(oldLineRe)
-		listContext.append(newLineRe)
-	return JsonResponse({'lines': listContext})'''
-
 
 def get_response_not(request):
 	if not request.user.is_authenticated:
-			return redirect('login-view')
+		return redirect('login-view')
 	
-	url = ChangesInLines.objects.filter(user=request.user).order_by('-created_on')
+	url = ChangesStore.objects.select_related('url_model').filter(user=request.user).order_by('-created_on')
 
 	return render(request, 'user_temp/notifications.html', context={'urls': url})
 
 
-'''def get_notice_changes(request):
-	context   = {}
-	lines 	  = ChangesInLines.objects.filter(user=request.user)
-	listLines = []
 
-	for line in lines:
-		listLines.append(line.name)
-	context['length'] = len(listLines)
-
-	return JsonResponse(context)'''
 
 
 

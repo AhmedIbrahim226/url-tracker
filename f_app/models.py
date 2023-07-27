@@ -16,12 +16,11 @@ class UrlModel(models.Model):
 		return self.name
 
 
-class ChangesInLines(models.Model):
+class ChangesStore(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	url_model = models.ForeignKey(UrlModel, on_delete=models.CASCADE)
-	old_line = models.TextField()
-	new_line = models.TextField()
+	description = models.TextField()
 	created_on = models.DateTimeField(default=timezone.now)
 
 	def __str__(self):
-		return self.name
+		return self.url_model.name
