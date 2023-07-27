@@ -1,6 +1,8 @@
 from threading import Thread
 from time import sleep
+from typing import Any, Dict
 from django.contrib.auth.models import User
+from django.http import HttpResponse
 from django.http.response import HttpResponse, JsonResponse
 import requests
 from bs4 import BeautifulSoup
@@ -18,22 +20,8 @@ from .models import UrlModel, ChangesInLines
 
 
 
-def update_links():
-	while True:
-		listScrap = []
-		for name in UrlModel.objects.all():
-			soup = BeautifulSoup(requests.get(name.url).text, 'html.parser')
-			for scraping in soup.prettify().split('\n'):
-				listScrap.append(scraping.strip())
-			sleep(name.updating_time*60)
-			UrlModel.objects.filter(url=name.url).update(
-					source_code='\n'.join(listScrap)
-			)
-			listScrap.clear()
-def update_thread():
-	t = Thread(target=update_links)
-	t.start()
-# update_thread()
+
+
 
 def check_diffrence():
 	while True:
@@ -68,10 +56,7 @@ def check_diffrence():
 							settings.EMAIL_HOST_USER,
 							[scraper.user.email],
 						)
-def check_thread():
-	t = Thread(target=check_diffrence)
-	t.start()
-# check_thread()
+
 
 
 
@@ -133,6 +118,10 @@ def login_view(request):
 
 	return render(request, 'user_temp/login.html', context={})
 
+
+from .utils import new_periodic_task, get_url_source_code
+
+
 def url_view(request):
 	context = {}
 	list_unique_name = []
@@ -140,33 +129,52 @@ def url_view(request):
 	for uniqe in UrlModel.objects.filter(user=request.user):
 		list_unique_name.append(uniqe.name)
 		list_unique_url.append(uniqe.url)
-	listScrap = []
+
 	if request.method == 'POST':
 		name 	= request.POST.get('name')
 		url 	= request.POST.get('url')
 		length 	= request.POST.get('length')
 		time 	= request.POST.get('time')
-		soup 	= BeautifulSoup(requests.get(url).text, 'html.parser')
+
 		nameLower = name.lower()
 		if nameLower in list_unique_name:
 			context['errorName'] = 'You assign this name for link before.'
 		elif url in list_unique_url:
 			context['errorUrl'] = 'You assign this link before.'
 		else:
-			for scraping in soup.prettify().split('\n'):
-				listScrap.append(scraping.strip())
-			UrlModel.objects.create(
+			url = UrlModel.objects.create(
 					user=request.user,
 					name=nameLower,
 					url=url,
 					checking_length=length,
 					updating_time=time,
-					source_code='\n'.join(listScrap),
-					check_code='\n'.join(listScrap),
-					old_line='',
-					new_line=''
+					source_code=requests.get(url).text,
 			)
+			new_periodic_task(request.user.id, url.id, time, (time*60)+1)
 	return render(request, 'user_temp/url_model.html', context=context)
+
+from django.views.generic.edit import FormView
+class UrlView(FormView):
+	form_class = UrlForm
+	template_name = 'user_temp/url_model.html'
+	success_url   ='/'
+
+	def get_form_kwargs(self):
+		kwargs = super().get_form_kwargs()
+		kwargs['user'] = self.request.user
+		return kwargs
+	
+
+	def form_valid(self, form):
+		form.instance.user = self.request.user
+		url = form.cleaned_data.get('url')
+		every = form.cleaned_data.get('updating_time')
+		form.instance.source_code = get_url_source_code(url=url)
+
+		form.save()
+		new_periodic_task(user_id=self.request.user.id, url_model_id=form.instance.id, every=every)
+
+		return super().form_valid(form)
 	
 
 def delete_solo_url(request, id):

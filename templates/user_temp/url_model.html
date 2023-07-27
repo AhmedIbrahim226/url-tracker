@@ -5,71 +5,40 @@
 {% endblock %}
 
 {% block content %}
-    <!-- <form action="" method="post" style="margin: 10% 40%">
-    {% csrf_token %}
-        <div class="input-group mb-3">
-            <span class="input-group-text" style="width: 110px">Name<b>:</b></span>
-            <input class="form-control" type="text" name="name" id="name" required>
-            {% if errorName %}
-                <ul>
-                    <li class="text-danger">{{ errorName }}</li>
-                </ul>
+        <form class="add" method="post">
+            {% csrf_token %}
+            <h5>Insert New URL</h5>
+            {% if form.non_field_errors %}
+                <div class="text-danger text-center">
+                    {{form.non_field_errors}}
+                </div>
             {% endif %}
-        </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text" style="width: 110px">Url<b>:</b></span>
-            <input class="form-control" type="url" name="url" id="url" required>
-            {% if errorUrl %}
-                <ul>
-                    <li class="text-danger">{{ errorUrl }}</li>
-                </ul>
-            {% endif %}
-        </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text" style="width: 110px">Check-lenght<b>:</b></span>
-            <input class="form-control" type="number" name="length" id="length" required>
-        </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text" style="width: 110px">Ubdate-time<b>:</b></span>
-            <input class="form-control" type="number" name="time" id="time" required>
-        </div>
-
-        <button type="submit" class="btn btn-success">Add-Url</button>
-
-    </form> -->
-
-            <form class="add" method="post">
-                {% csrf_token %}
-                <h5>Insert New URL</h5>
-                <div>
-                    <label class="labelForm">Name</label>
-                    <input class="edIn1" type="text" name="name" placeholder="URL Name" required />
-                    {% if errorName %}
-                            <p class="text-danger text-center" style="font-weight: bold;">{{ errorName }}</p>
-                    {% endif %}
-        
-                </div>
-        
-                <div>
-                    <label class="labelForm">Url</label>
-                    <input class="edIn1" type="url" name="url" placeholder="https://" required/>
-                    {% if errorUrl %}
-                        <p class="text-danger text-center" style="font-weight: bold;">{{ errorUrl }}</p>
-                    {% endif %}
-                </div>
-        
-                <div>
-                    <label class="labelForm">Check Length</label>
-                    <input class="edIn1" type="number" name="length" required/>
-                </div>
-        
-                <div>
-                    <label class="labelForm">Update Time</label>
-                    <input class="edIn1" type="number" name="time" required/>
-                </div>
-        
-                <button class="button1_insert" type="submit">Add Url</button>
-            </form>
+            <div>
+                <label class="labelForm">Name</label>
+                {{form.name}}
+                <p class="text-danger text-center" style="font-weight: bold;">{{form.name.errors}}</p>        
+            </div>
+    
+            <div>
+                <label class="labelForm">Url</label>
+                {{form.url}}
+                <p class="text-danger text-center" style="font-weight: bold;">{{form.url.errors}}</p>
+            </div>
+    
+            <div>
+                <label class="labelForm">Check Length</label>
+                {{form.checking_length}}
+                <p class="text-danger text-center" style="font-weight: bold;">{{form.checking_length.errors}}</p>
+            </div>
+    
+            <div>
+                <label class="labelForm">Update Time</label>
+                {{form.updating_time}}
+                <p class="text-danger text-center" style="font-weight: bold;">{{form.checking_length.errors}}</p>
+            </div>
+    
+            <button class="button1_insert" type="submit">Add Url</button>
+        </form>
 
 
 
