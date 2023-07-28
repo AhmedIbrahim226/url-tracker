@@ -7,6 +7,7 @@ import diff_match_patch as dmp_module
 
 def get_url_source_code(url):
     return requests.get(url).text
+
 def custom_0(lis):
     for idx, _ in enumerate(lis):
         if idx == 0 and _[0] == 0:
@@ -15,8 +16,6 @@ def custom_0(lis):
             yield 0, _[1][:287]
         else:
             yield _
-
-
 
 def check_difference(old_source, new_source):
     dmp = dmp_module.diff_match_patch()

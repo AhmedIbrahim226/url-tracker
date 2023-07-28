@@ -11,6 +11,9 @@ class UrlModel(models.Model):
 	updating_time = models.IntegerField()
 	source_code	= models.TextField()
 
+	class Meta:
+		unique_together = ('user', 'name', 'url')
+
 	
 	def __str__(self):
 		return self.name

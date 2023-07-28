@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 
 from django.urls import path
 from django.contrib.auth import views
-from .views import HomeView, get_response_not, login_view, edit_user_profile_view, log_out_view, change_password_view, UrlView, url_view, delete_solo_url, update_solo_url, home_search_view
+from .views import HomeView, get_response_not, login_view, edit_user_profile_view, log_out_view, change_password_view, UrlView, UpdateUrlView, delete_solo_url, home_search_view
 
 urlpatterns = [
 
@@ -12,10 +12,9 @@ urlpatterns = [
 
 	path('search/', home_search_view, name='search-view'),
 	path('login/', login_view, name='login-view'),
-	# path('url-fecth/', url_view, name='url-fecth'),
 	path('url-fecth/', UrlView.as_view(), name='url-fecth'),
 	path('delete/<id>/', delete_solo_url, name='delete-solo'),
-	path('update/<id>/', update_solo_url,name='update-solo'),
+	path('update/<id>/', UpdateUrlView.as_view() ,name='update-solo'),
 	path('edit-my-data/', edit_user_profile_view,name='edit-my-data'),
 	path('sign-out/', log_out_view, name='sign-out'),
 	path('set-new-password/', change_password_view, name='set-new-password'),

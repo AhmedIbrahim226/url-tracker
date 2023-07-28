@@ -1,66 +1,14 @@
 from django.contrib.auth.models import User
-
-import requests
 import re
 
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
-from django.conf import settings
-from django.core.mail import send_mail
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.views.generic import View
 from .forms import EditUserForm, ChangePasswordForm, UrlForm
 from .models import UrlModel, ChangesStore
 from django.views.generic.edit import FormView
-
-
-
-
-
-
-
-def check_diffrence():
-	while True:
-		for scraper in UrlModel.objects.all():
-			source_code 	  = scraper.source_code
-			source_code_split = scraper.source_code.split('\n')
-			check_code_split  = scraper.check_code.split('\n')
-			
-			for source, check in zip(source_code_split, check_code_split):
-				if check not in source_code_split:
-					if len(check) < scraper.checking_length or len(check) > scraper.checking_length:
-
-						update = UrlModel.objects.filter(name=scraper)
-						update.update(
-								old_line=check,
-								new_line=source,
-								check_code=source_code
-							)
-
-						create = ChangesInLines.objects
-						create.create(
-							user=scraper.user,
-							url_model=scraper,
-							name=scraper,
-							url=scraper.url,
-							old_line=check,
-							new_line=source
-						)
-						send_mail(
-							'Diffrence in your link. '+'('+scraper.url+')',
-							'THE OLD: '+check + '\nTHE NEW: '+source,
-							settings.EMAIL_HOST_USER,
-							[scraper.user.email],
-						)
-
-
-
-
-
-
-
-
-
+from .utils import new_periodic_task, get_url_source_code
 
 
 class HomeView(View):
@@ -115,53 +63,20 @@ def login_view(request):
 	return render(request, 'user_temp/login.html', context={})
 
 
-from .utils import new_periodic_task, get_url_source_code
 
 
-def url_view(request):
-	context = {}
-	list_unique_name = []
-	list_unique_url  = []
-	for uniqe in UrlModel.objects.filter(user=request.user):
-		list_unique_name.append(uniqe.name)
-		list_unique_url.append(uniqe.url)
-
-	if request.method == 'POST':
-		name 	= request.POST.get('name')
-		url 	= request.POST.get('url')
-		length 	= request.POST.get('length')
-		time 	= request.POST.get('time')
-
-		nameLower = name.lower()
-		if nameLower in list_unique_name:
-			context['errorName'] = 'You assign this name for link before.'
-		elif url in list_unique_url:
-			context['errorUrl'] = 'You assign this link before.'
-		else:
-			url = UrlModel.objects.create(
-					user=request.user,
-					name=nameLower,
-					url=url,
-					checking_length=length,
-					updating_time=time,
-					source_code=requests.get(url).text,
-			)
-			new_periodic_task(request.user.id, url.id, time, (time*60)+1)
-	return render(request, 'user_temp/url_model.html', context=context)
 
 class UrlView(FormView):
 	form_class = UrlForm
 	template_name = 'user_temp/url_model.html'
 	success_url   ='/'
 
-	def get_form_kwargs(self):
-		kwargs = super().get_form_kwargs()
-		kwargs['user'] = self.request.user
-		return kwargs
-	
+	def get_initial(self):
+		initial = super().get_initial()
+		initial['user'] = self.request.user
+		return initial
 
 	def form_valid(self, form):
-		form.instance.user = self.request.user
 		url = form.cleaned_data.get('url')
 		every = form.cleaned_data.get('updating_time')
 		form.instance.source_code = get_url_source_code(url=url)
@@ -177,38 +92,20 @@ def delete_solo_url(request, id):
 	url.delete()
 	return redirect('home-view')
 
-def update_solo_url(request, id):
-	context = {}
-	list_unique_name = []
-	list_unique_url  = []
-	for uniqe in UrlModel.objects.filter(user=request.user):
-		list_unique_name.append(uniqe.name)
-		list_unique_url.append(uniqe.url)
-		
-	url  = UrlModel.objects.get(id=id)
-	form = UrlForm(instance=url)
-	context['form'] = form
-	if form.instance.name in list_unique_name:
-		list_unique_name.remove(form.instance.name)
-	if form.instance.url in list_unique_url:
-		list_unique_url.remove(form.instance.url)
+class UpdateUrlView(FormView):
+	form_class = UrlForm
+	template_name = 'user_temp/edit_url.html'
+	success_url = '/'
 
-	if request.method == 'POST':
-		name 	  = request.POST.get('name')
-		url_name  = request.POST.get('url')
-		nameLower = name.lower()
+	def get_form(self, form_class=form_class):
+		url_model = UrlModel.objects.get(id=self.kwargs.get('id'))
+		return form_class(instance=url_model, **self.get_form_kwargs())
 
-		if nameLower in list_unique_name:
-			context['errorName'] = 'You assign this name for link before.'
-		elif url_name in list_unique_url:
-			context['errorUrl'] = 'You assign this link before.'
-		else:
-			form = UrlForm(request.POST, instance=url)
-			if form.is_valid():
-				form.save()
-				return redirect('home-view')
-		
-	return render(request, 'user_temp/edit_url.html', context=context)
+	def form_valid(self, form):
+		form.instance.user = self.request.user
+		form.save()
+		return super().form_valid(form=form)
+
 
 def edit_user_profile_view(request):
 	form = EditUserForm(instance=request.user)

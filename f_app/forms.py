@@ -16,12 +16,12 @@ class ChangePasswordForm(PasswordChangeForm):
 		fields = ['__all__']
 
 class UrlForm(forms.ModelForm):
+	user = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
 	class Meta:
 		model  = UrlModel
-		fields = ['name', 'url', 'checking_length', 'updating_time']
+		fields = ['user', 'name', 'url', 'checking_length', 'updating_time']
 	
 	def __init__(self, *args, **kwargs):
-		self.user = kwargs.pop('user', None)
 		super(UrlForm, self).__init__(*args, **kwargs)
 		self.fields['name'].widget.attrs.update({'class': 'edIn1', 'placeholder': 'URL Name'})
 		self.fields['url'].widget.attrs.update({'class': 'edIn1', 'placeholder': 'https://'})
@@ -33,12 +33,5 @@ class UrlForm(forms.ModelForm):
 		name = self.cleaned_data.get('name')
 		name = name.lower()
 		return name
-	
-	def clean(self):
-		data = super().clean()
-		name = data.get('name')
-		url = data.get('url')
-		if UrlModel.objects.filter(user=self.user, name=name, url=url).exists():
-			raise ValidationError("You already have a URL with this Name and Link")
-		return data
+
 	

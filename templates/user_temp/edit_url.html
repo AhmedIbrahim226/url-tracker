@@ -9,12 +9,17 @@
 	<form class="add" method="post">
 		{% csrf_token %}
 		<h5>Modify URL</h5>
+		{% if form.non_field_errors %}
+			<div class="text-danger text-center">
+				{{form.non_field_errors}}
+			</div>
+		{% endif %}
+		{{form.user}}
 		<div>
-			<!-- <label class="labelForm">Name</label> -->
 			<label>{{ form.name.label }}</label>
 			{{ form.name }}
-			{% if errorName %}
-					<p class="text-danger text-center" style="font-weight: bold;">{{ errorName }}</p>
+			{% if form.mame.errors %}
+					<div class="text-danger text-center" style="font-weight: bold;">{{ form.mame.errors }}</div>
 			{% endif %}
 
 		</div>
@@ -22,19 +27,25 @@
 		<div>
 			<label>{{ form.url.label }}</label>
 			{{ form.url }}
-			{% if errorUrl %}
-				<p class="text-danger text-center" style="font-weight: bold;">{{ errorUrl }}</p>
+			{% if form.url.errors %}
+				<div class="text-danger text-center" style="font-weight: bold;">{{ form.url.errors }}</div>
 			{% endif %}
 		</div>
 
 		<div>
 			<label>{{ form.checking_length.label }}</label>
 			{{ form.checking_length }}
+			{% if form.checking_length.errors %}
+				<div class="text-danger text-center" style="font-weight: bold;">{{ form.checking_length.errors }}</div>
+			{% endif %}
 		</div>
 
 		<div>
 			<label>{{ form.updating_time.label }}</label>
 			{{ form.updating_time }}
+			{% if form.updating_time.errors %}
+				<div class="text-danger text-center" style="font-weight: bold;">{{ form.updating_time.errors }}</div>
+			{% endif %}
 		</div>
 
 		<button class="button1_insert" type="submit">Save</button>

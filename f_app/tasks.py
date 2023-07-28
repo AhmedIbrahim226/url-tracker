@@ -17,6 +17,13 @@ def monitor_url_changes(self, url_model_id):
 
     result = check_difference(old_source=old_source, new_source=new_source)
 
+    # send_mail(
+    #     'Diffrence in your link. ' + '(' + scraper.url + ')',
+    #     'THE OLD: ' + check + '\nTHE NEW: ' + source,
+    #     settings.EMAIL_HOST_USER,
+    #     [scraper.user.email],
+    # )
+
     ChangesStore.objects.create(user=user, url_model=url_model, description=result)
     url_model.source_code = new_source
     url_model.save()
