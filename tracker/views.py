@@ -9,6 +9,7 @@ from .forms import EditUserForm, ChangePasswordForm, UrlForm
 from .models import UrlModel, ChangesStore
 from django.views.generic.edit import FormView
 from .utils import new_periodic_task, get_url_source_code
+from tasks.utils import delete_periodic_task
 
 
 class HomeView(View):
@@ -26,7 +27,10 @@ class HomeView(View):
 		if request.method == 'POST':
 			urls_id = request.POST.getlist('id[]')
 			for id in urls_id:
-				url = UrlModel.objects.get(id=id)
+				url = UrlModel.objects.select_related('user').get(id=id)
+				delete_periodic_task(name=f'user_{url.user.id}_url_{url.id}')
+				for task in url.url_model_task_control.all():
+					task.revoke_celery_task()
 				url.delete()
 			return redirect('home-view')
 
@@ -47,6 +51,7 @@ def home_search_view(request):
 	
 	return render(request, 'user_temp/search.html', context=context)
 
+
 def login_view(request):
 	if request.user.is_authenticated:
 		return redirect('home-view')
@@ -61,9 +66,6 @@ def login_view(request):
 			messages.error(request, 'Username or Password is incorrect')
 
 	return render(request, 'user_temp/login.html', context={})
-
-
-
 
 
 class UrlView(FormView):
@@ -88,7 +90,10 @@ class UrlView(FormView):
 	
 
 def delete_solo_url(request, id):
-	url = UrlModel.objects.get(id=id)
+	url = UrlModel.objects.select_related('user').get(id=id)
+	delete_periodic_task(name=f'user_{url.user.id}_url_{url.id}')
+	for task in url.url_model_task_control.all():
+		del_task = task.revoke_celery_task
 	url.delete()
 	return redirect('home-view')
 
@@ -155,10 +160,6 @@ def get_response_not(request):
 	url = ChangesStore.objects.select_related('url_model').filter(user=request.user).order_by('-created_on')
 
 	return render(request, 'user_temp/notifications.html', context={'urls': url})
-
-
-
-
 
 
 def log_out_view(request):

@@ -33,6 +33,6 @@ def new_periodic_task(user_id, url_model_id, every):
     PeriodicTask.objects.create(
         interval=schedule,
         name=f'user_{user_id}_url_{url_model_id}',
-        task='f_app.tasks.monitor_url_changes',
+        task='tracker.tasks.monitor_url_changes',
         args=json.dumps([url_model_id])
     )

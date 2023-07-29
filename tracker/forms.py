@@ -1,8 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
 from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
-from f_app.models import UrlModel
+from .models import UrlModel
 
 
 class EditUserForm(UserChangeForm):

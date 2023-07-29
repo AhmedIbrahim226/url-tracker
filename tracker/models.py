@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
-
-
+from django.contrib.humanize.templatetags.humanize import naturaltime
+from django.utils.functional import cached_property
 class UrlModel(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	name = models.CharField(max_length=200)
@@ -27,3 +27,7 @@ class ChangesStore(models.Model):
 
 	def __str__(self):
 		return self.url_model.name
+
+	@cached_property
+	def ret_created_on(self):
+		return naturaltime(self.created_on)

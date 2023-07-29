@@ -3,13 +3,14 @@ from celery import shared_task
 
 from .models import UrlModel, ChangesStore
 from .utils import check_difference
-
+from tasks.models import TaskControl
 
 
 
 @shared_task(bind=True)
 def monitor_url_changes(self, url_model_id):
     url_model = UrlModel.objects.get(id=url_model_id)
+    TaskControl.objects.create(url_model=url_model, uuid=self.request.id)
     user =  url_model.user
     url = url_model.url
     old_source = url_model.source_code
