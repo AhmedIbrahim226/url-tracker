@@ -35,7 +35,7 @@ define the period time.**
 
 - ### Notifications Page
 
-  - **notifications not real time notify, its meaning you should  open notification page and you can reload page to check for new notifications**
+  - **notifications not real time notify, its meaning you should  open notification page and you can reload page to check for new notifications, may be update this feature to notify with websockets and django-channels**
 
   ​      ![Screenshot from 2023-07-29 11-25-09](https://github.com/AhmedIbrahim226/url-tracker/assets/66057218/7d317066-6276-4a25-b966-809975aded63)
 
